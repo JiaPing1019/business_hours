@@ -1,4 +1,3 @@
-import "./App.css";
 import Week from "./components/Week";
 
 function App() {

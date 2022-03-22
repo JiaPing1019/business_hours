@@ -2,6 +2,7 @@ import DayItem from "./DayItem";
 import DayDisplay from "./DayDisplay";
 import Button from "@mui/material/Button";
 import React, { useState, useEffect } from "react";
+import Grid from "@mui/material/Grid";
 
 const initialWeek = [
   { id: 1, dayOfWeek: "Monday", openTime: "", closeTime: "", isEnable: false },
@@ -32,13 +33,6 @@ const initialWeek = [
 ];
 
 function Week() {
-  const [dayDetail, setDayDetail] = useState({
-    dayOfWeek: "",
-    openTime: "",
-    closeTime: "",
-    isEnable: false,
-  });
-
   const [dayItems, setDayItems] = useState([]);
   const [saveDayItems, setSaveDayItems] = useState([]);
 
@@ -76,7 +70,7 @@ function Week() {
     setDayItems(updateList);
   };
 
-  const handleOnClick = (id, time) => {
+  const handleSaveChanges = (id, time) => {
     const updateList = dayItems.map((dayItem) => {
       if (dayItem.id === id) {
         const updateDayItem = {
@@ -109,25 +103,39 @@ function Week() {
   console.log(saveDayItems);
 
   return (
-    <>
-      {dayItems.map((d) => {
-        return (
-          <DayItem
-            key={d.id}
-            dayItem={d}
-            handleOpenChange={handleOpenChange}
-            handleCloseChange={handleCloseChange}
-            handleOnClick={handleOnClick}
-          />
-        );
-      })}
+    <Grid container direction="column">
+      <Grid
+        item
+        xs={12}
+        style={{ marginTop: 30, marginLeft: 30, maxWidth: 750 }}
+      >
+        {dayItems.map((d) => {
+          return (
+            <DayItem
+              key={d.id}
+              dayItem={d}
+              handleOpenChange={handleOpenChange}
+              handleCloseChange={handleCloseChange}
+              handleSaveChanges={handleSaveChanges}
+            />
+          );
+        })}
+        <Grid container direction="row" justifyContent="flex-end">
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleSubmit}
+            sx={{ align: "right" }}
+          >
+            SAVE CHANGES
+          </Button>
 
-      <Button variant="contained" color="success" onClick={handleSubmit}>
-        SAVE CHANGES
-      </Button>
-
-      {saveDayItems.length > 0 ? <DayDisplay dayItems={saveDayItems} /> : null}
-    </>
+          {saveDayItems.length > 0 ? (
+            <DayDisplay dayItems={saveDayItems} />
+          ) : null}
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
