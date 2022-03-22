@@ -1,12 +1,8 @@
-import './App.css';
+import "./App.css";
+import Week from "./components/Week";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-      </header>
-    </div>
-  );
+  return <Week /> 
 }
 
 export default App;
