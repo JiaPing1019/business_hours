@@ -1,7 +1,12 @@
 import Week from "./components/Week";
+import Container from "@mui/material/Container";
 
 function App() {
-  return <Week /> 
+  return (
+    <Container maxWidth="lg">
+      <Week />
+    </Container>
+  );
 }
 
 export default App;

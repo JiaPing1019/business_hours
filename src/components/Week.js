@@ -1,8 +1,9 @@
 import DayItem from "./DayItem";
-import DayDisplay from "./DayDisplay";
+import DayList from "./DayList";
 import Button from "@mui/material/Button";
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
 
 const initialWeek = [
   { id: 1, dayOfWeek: "Monday", openTime: "", closeTime: "", isEnable: false },
@@ -32,15 +33,17 @@ const initialWeek = [
   { id: 7, dayOfWeek: "Sunday", openTime: "", closeTime: "", isEnable: false },
 ];
 
-function Week() {
+const Week = () => {
   const [dayItems, setDayItems] = useState([]);
   const [saveDayItems, setSaveDayItems] = useState([]);
+  const [defaultOpenTime, setDefaultOpenTime] = useState(new Date());
+  const [defaultCloseTime, setDefaultCloseTime] = useState(new Date());
 
   useEffect(() => {
     setDayItems(initialWeek);
   }, []);
 
-  const handleOpenChange = (id, time) => {
+  const handleOpenTimeChange = (id, time) => {
     const updateList = dayItems.map((dayItem) => {
       if (dayItem.id === id) {
         const updateDayItem = {
@@ -52,10 +55,11 @@ function Week() {
       return dayItem;
     });
 
+    setDefaultOpenTime(time);
     setDayItems(updateList);
   };
 
-  const handleCloseChange = (id, time) => {
+  const handleCloseTImeChange = (id, time) => {
     const updateList = dayItems.map((dayItem) => {
       if (dayItem.id === id) {
         const updateDayItem = {
@@ -68,14 +72,21 @@ function Week() {
     });
 
     setDayItems(updateList);
+    setDefaultCloseTime(time);
   };
 
-  const handleSaveChanges = (id, time) => {
+  const handleOnClickChanges = (targetDateItem) => {
     const updateList = dayItems.map((dayItem) => {
-      if (dayItem.id === id) {
+      if (dayItem.id === targetDateItem.id) {
         const updateDayItem = {
           ...dayItem,
           isEnable: !dayItem.isEnable,
+          openTime: targetDateItem.openTime
+            ? targetDateItem.openTime
+            : defaultOpenTime,
+          closeTime: dayItem.targetDateItem
+            ? targetDateItem.closeTime
+            : defaultCloseTime,
         };
         return updateDayItem;
       }
@@ -85,58 +96,74 @@ function Week() {
     setDayItems(updateList);
   };
 
-  const handleSubmit = (e) => {
+  const handleSaveChanges = (e) => {
     e.preventDefault();
 
     const list = dayItems.filter((dayItem) => {
-      if (
-        dayItem.isEnable &&
-        dayItem.openTime !== "" &&
-        dayItem.closeTime !== ""
-      ) {
-        return dayItem;
-      }
+      if (validateDayItem(dayItem)) return dayItem;
     });
 
     setSaveDayItems(list);
   };
-  console.log(saveDayItems);
+
+  const validateDayItem = (dayItem) => {
+    // openTime and closeTime is not equal to empty string, null, and undefined
+    // plus closeTime must be greater than openTime
+    return (
+      dayItem.isEnable &&
+      dayItem.openTime !== "" &&
+      !!dayItem.openTime &&
+      dayItem.closeTime !== "" &&
+      !!dayItem.closeTime &&
+      new Date(dayItem.closeTime) > new Date(dayItem.openTime)
+    );
+  };
 
   return (
-    <Grid container direction="column">
-      <Grid
-        item
-        xs={12}
-        style={{ marginTop: 30, marginLeft: 30, maxWidth: 750 }}
-      >
-        {dayItems.map((d) => {
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      sx={{
+        mt: 3,
+      }}
+    >
+      <Grid item xs={12}>
+        {dayItems.map((dayItem) => {
           return (
             <DayItem
-              key={d.id}
-              dayItem={d}
-              handleOpenChange={handleOpenChange}
-              handleCloseChange={handleCloseChange}
-              handleSaveChanges={handleSaveChanges}
+              key={dayItem.id}
+              dayItem={dayItem}
+              defaultOpenTime={
+                dayItem.openTime ? dayItem.openTime : defaultOpenTime
+              }
+              defaultCloseTime={
+                dayItem.closeTime ? dayItem.closeTime : defaultCloseTime
+              }
+              handleOpenTimeChange={handleOpenTimeChange}
+              handleCloseTImeChange={handleCloseTImeChange}
+              handleOnClickChanges={handleOnClickChanges}
             />
           );
         })}
-        <Grid container direction="row" justifyContent="flex-end">
+        <Grid container item xs={12} justifyContent="flex-end">
           <Button
             variant="contained"
             color="success"
-            onClick={handleSubmit}
-            sx={{ align: "right" }}
+            onClick={handleSaveChanges}
           >
             SAVE CHANGES
           </Button>
-
-          {saveDayItems.length > 0 ? (
-            <DayDisplay dayItems={saveDayItems} />
-          ) : null}
         </Grid>
+      </Grid>
+
+      <Divider sx={{ mb: 10, mt: 10 }} />
+
+      <Grid item xs={12}>
+        <DayList dayItems={saveDayItems} />
       </Grid>
     </Grid>
   );
-}
+};
 
 export default Week;

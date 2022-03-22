@@ -10,45 +10,46 @@ import Checkbox from "@mui/material/Checkbox";
 
 const DayItem = ({
   dayItem,
-  handleOpenChange,
-  handleCloseChange,
-  handleSaveChanges,
+  defaultOpenTime,
+  defaultCloseTime,
+  handleOpenTimeChange,
+  handleCloseTImeChange,
+  handleOnClickChanges,
 }) => {
   return (
-    <Card sx={{ minHeight: 70, m: "10px", display: "flex" }}>
+    <Card sx={{ minHeight: 80, mb: "10px", display: "flex" }}>
       <Grid container dsiplay="flex" direction="row" alignItems="center">
-        <Grid item xs={1} style={{ textAlign: "center" }}>
+        <Grid item xs={4} sm={1}>
           <Checkbox
             color="success"
-            onChange={(e) => handleSaveChanges(dayItem.id, e)}
+            onChange={(e) => handleOnClickChanges(dayItem, e)}
           />
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs={8} sm={1}>
           {dayItem.dayOfWeek}
         </Grid>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={9}>
-          {dayItem.isEnable ? (
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Grid item xs={0} sm={1} />
+        {dayItem.isEnable ? (
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Grid item xs={12} sm={3}>
               <TimePicker
                 label="Open"
-                value={dayItem.openTime}
-                onChange={(e) => handleOpenChange(dayItem.id, e)}
-                renderInput={(params) => (
-                  <TextField {...params} sx={{ mr: 4 }} />
-                )}
+                value={defaultOpenTime}
+                onChange={(e) => handleOpenTimeChange(dayItem.id, e)}
+                renderInput={(params) => <TextField {...params} fullWidth />}
               />
+            </Grid>
+            <Grid item xs={0} sm={1} />
+            <Grid item xs={12} sm={3}>
               <TimePicker
                 label="Close"
-                value={dayItem.closeTime}
-                onChange={(e) => handleCloseChange(dayItem.id, e)}
-                renderInput={(params) => (
-                  <TextField {...params} />
-                )}
+                value={defaultCloseTime}
+                onChange={(e) => handleCloseTImeChange(dayItem.id, e)}
+                renderInput={(params) => <TextField {...params} fullWidth />}
               />
-            </LocalizationProvider>
-          ) : null}
-        </Grid>
+            </Grid>
+          </LocalizationProvider>
+        ) : null}
       </Grid>
     </Card>
   );
