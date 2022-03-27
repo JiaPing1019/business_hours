@@ -44,6 +44,9 @@ npm start
 
 - [ ] IF the save failed, we should show error messages on the UI
 
+## Demo
+
+https://user-images.githubusercontent.com/12680148/160289108-6383a3c7-f7bd-4191-84c9-37b9bf1115b0.mov
 
 ## UI display
 
