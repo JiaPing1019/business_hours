@@ -1,7 +1,7 @@
 # Business hours 
 
-This project is to let a user set the opening hours for their organisation. e.g. the opening hours for
-a Nursery or School. 
+This project is to let a user set the opening hours for their organization. e.g. the opening hours for
+a Nursery or School (simplified version).
 
 ## Quickstart
 
